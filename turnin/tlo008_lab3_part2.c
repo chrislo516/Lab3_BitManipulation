@@ -14,24 +14,25 @@
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-    DDRD = 0x00; PORTD = 0xFF;
-    DDRB = 0xFE; PORTB = 0X01;	// Last bit is an input
-    
-    unsigned short sensor = 0x0000; 
-    unsigned char tmp = 0x00;
-    unsigned char op = 0x01;
-  
+    DDRA = 0x00; PORTA = 0xFF;
+    DDRC = 0xFF; PORTC = 0x00;    
+    unsigned char fuelLevel = 0x00; 
     /* Insert your solution below */
     while (1) {
-     sensor = (PIND<<1);
-     tmp = PINB & 0x01;
-     sensor = sensor|tmp;
-     if(sensor >= 0x0046){  // 0x0046 = 70
-	op = 0x02;
-     }else if((sensor > 0x0005)&&(sensor<0x0046)){
-	op = 0x04;
-     }
-    PORTB = op;
-   }
+	fuelLevel = PINA;
+        if(fuelLevel<=0x02){
+	  PORTC = 0x60;
+	}else if(fuelLevel<=0x04){
+	  PORTC = 0x70;
+	}else if(fuelLevel<=0x06){
+	  PORTC = 0x38;
+	}else if(fuelLevel<=0x09){
+	  PORTC = 0x3C;
+	}else if(fuelLevel<=0x0C){
+	  PORTC = 0x3E;
+	}else{
+	  PORTC = 0x3F;
+	}
+    }
    return 1;
 }
